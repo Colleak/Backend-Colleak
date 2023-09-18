@@ -10,10 +10,12 @@ The Back end is made by:
 - Jaimy Derks
 - Art Nooijen
 --- 
-### how to start the program
+## how to start the program
 To run the Visual studio app, open the correct project and press f5
+
 dont forget to add the ConnectionString to your user secret.
-Our Services mappings:
+## End-points 
+Our Services:
 - GET/api/Employees
 - POST/api/Employees
 - GET/api/Employees/{id}
