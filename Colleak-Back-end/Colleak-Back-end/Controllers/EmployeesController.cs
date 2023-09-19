@@ -16,12 +16,20 @@ namespace Colleak_Back_end.Controllers
         _iEmployeesService = iEmployeesService;
 
         [HttpGet]
-        public async Task<List<Employee>> Get() =>
-            await _iEmployeesService.GetEmployeeAsync();
+        public async Task<ActionResult<List<Employee>>> Get()
+        {
+            var employees = await _iEmployeesService.GetEmployeeAsync(); 
+            
+            return employees != null ? Ok(employees) : NotFound();
+        }
 
         [HttpGet("{id:length(24)}")]
         public async Task<ActionResult<Employee>> Get(string id)
         {
+            if (id == null)
+            {
+                return BadRequest();
+            }
             var employee = await _iEmployeesService.GetEmployeeAsync(id);
 
             if (employee is null)
@@ -29,47 +37,51 @@ namespace Colleak_Back_end.Controllers
                 return NotFound();
             }
 
-            return employee;
+            return Ok(employee);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(Employee newEmployee)
+        public async Task<ActionResult> Post(Employee newEmployee)
         {
+            if (!ModelState.IsValid || newEmployee.EmployeeName == null)
+            {
+                return BadRequest();
+            }
             await _iEmployeesService.CreateEmployeeAsync(newEmployee);
 
-            return CreatedAtAction(nameof(Get), new { id = newEmployee.Id }, newEmployee);
+            return Ok(CreatedAtAction(nameof(Get), new { id = newEmployee.Id }, newEmployee));
         }
 
         [HttpPut("{id:length(24)}")]
-        public async Task<IActionResult> Update(string id, Employee updatedEmployee)
+        public async Task<ActionResult> Update(Employee oldEmployee, Employee updatedEmployee)
         {
-            var employee = await _iEmployeesService.GetEmployeeAsync(id);
-
-            if (employee is null)
+            if (oldEmployee is null || updatedEmployee is null)
             {
-                return NotFound();
+                return BadRequest();
+            }
+            if (!ModelState.IsValid || updatedEmployee.EmployeeName == null)
+            {
+                return BadRequest();
             }
 
-            updatedEmployee.Id = employee.Id;
+            updatedEmployee.Id = oldEmployee.Id;
 
-            await _iEmployeesService.UpdateEmployeeAsync(id, updatedEmployee);
+            await _iEmployeesService.UpdateEmployeeAsync(oldEmployee.Id, updatedEmployee);
 
-            return NoContent();
+            return Ok();
         }
 
         [HttpDelete("{id:length(24)}")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<ActionResult> Delete(Employee deleteEmployee)
         {
-            var employee = await _iEmployeesService.GetEmployeeAsync(id);
-
-            if (employee is null)
+            if (deleteEmployee is null)
             {
-                return NotFound();
+                return BadRequest();
             }
 
-            await _iEmployeesService.DeleteEmployeeAsync(id);
+            await _iEmployeesService.DeleteEmployeeAsync(deleteEmployee.Id);
 
-            return NoContent();
+            return Ok();
         }
     }
 }

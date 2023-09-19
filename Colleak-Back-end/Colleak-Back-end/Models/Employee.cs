@@ -9,7 +9,6 @@ namespace Colleak_Back_end.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
 
-        [BsonElement("Name")]
         public string EmployeeName { get; set; } = null!;
     }
 }

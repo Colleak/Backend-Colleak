@@ -23,7 +23,7 @@ namespace Colleak_Back_end.Services
         }
 
         public async Task<List<Employee>> GetEmployeeAsync() =>
-        await _employeesCollection.Find(_ => true).ToListAsync();
+            await _employeesCollection.Find(_ => true).ToListAsync();
 
         public async Task<Employee?> GetEmployeeAsync(string id) =>
             await _employeesCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
