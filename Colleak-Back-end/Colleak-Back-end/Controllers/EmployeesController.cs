@@ -74,7 +74,7 @@ namespace Colleak_Back_end.Controllers
         [HttpDelete("{id:length(24)}")]
         public async Task<ActionResult> Delete(Employee deleteEmployee)
         {
-            if (deleteEmployee is null)
+            if (deleteEmployee is null || deleteEmployee.Id is null)
             {
                 return BadRequest();
             }

@@ -40,7 +40,6 @@ namespace XUnitTest.Controller
             Assert.NotNull(result);
             result.Should().NotBeNull();
             result.Should().BeAssignableTo<ActionResult<List<Employee>>>();
-            //TODO Make this shit fucking work bro
             result.Result.Should().BeAssignableTo<OkObjectResult>();
             result.Result.As<OkObjectResult>().Value
                 .Should()
@@ -242,13 +241,31 @@ namespace XUnitTest.Controller
         }
 
         [Fact]
-        public async Task DeleteEmployee_ShouldReturnBadRequest_WhenSuccesfullyDeleted()
+        public async Task DeleteEmployee_ShouldReturnBadRequest_WhenDataIsNull()
         {
             //Arrange
             var employeesMock = _fixture.Create<Employee>();
             var _employeesMock = employeesMock;
             _serviceMock.Setup(x => x.DeleteEmployeeAsync(employeesMock.Id)).Returns(async () => employeesMock);
             employeesMock = null;
+
+            //Act
+            var result = await _sut.Delete(employeesMock).ConfigureAwait(false);
+
+            //Assert
+            Assert.NotNull(_employeesMock);
+            result.Should().NotBeNull();
+            result.Should().BeAssignableTo<BadRequestResult>();
+        }
+
+        [Fact]
+        public async Task DeleteEmployee_ShouldReturnBadRequest_WhenDataIdIsNull()
+        {
+            //Arrange
+            var employeesMock = _fixture.Create<Employee>();
+            var _employeesMock = employeesMock;
+            _serviceMock.Setup(x => x.DeleteEmployeeAsync(employeesMock.Id)).Returns(async () => employeesMock);
+            employeesMock.Id = null;
 
             //Act
             var result = await _sut.Delete(employeesMock).ConfigureAwait(false);
