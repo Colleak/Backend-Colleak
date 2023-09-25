@@ -31,7 +31,7 @@ namespace XUnitTest.Controller
         {
             //Arrange
             var employeesMock = _fixture.Create<List<Employee>>();
-            _serviceMock.Setup(x => x.GetEmployeeAsync()).Returns(async () => employeesMock);
+            _serviceMock.Setup(x => x.GetEmployeeAsync()).Returns(() => Task.FromResult(employeesMock));
 
             //Act
             var result = await _sut.Get().ConfigureAwait(false);
@@ -53,7 +53,7 @@ namespace XUnitTest.Controller
         {
             //Arrange
             List<Employee> response = null;
-            _serviceMock.Setup(x => x.GetEmployeeAsync()).Returns(async () => response);
+            _serviceMock.Setup(x => x.GetEmployeeAsync()).Returns(() => Task.FromResult(response));
 
             //Act
             var result = await _sut.Get().ConfigureAwait(false);
@@ -70,7 +70,7 @@ namespace XUnitTest.Controller
         {
             //Arrange
             var employeesMock = _fixture.Create<Employee>();
-            _serviceMock.Setup(x => x.GetEmployeeAsync(employeesMock.Id)).Returns(async () => employeesMock);
+            _serviceMock.Setup(x => x.GetEmployeeAsync(employeesMock.Id)).Returns(() => Task.FromResult(employeesMock));
 
             //Act
             var result = await _sut.Get(employeesMock.Id).ConfigureAwait(false);
@@ -91,7 +91,7 @@ namespace XUnitTest.Controller
             //Arrange
             Employee response = null;
             var employeesMock = _fixture.Create<Employee>();
-            _serviceMock.Setup(x => x.GetEmployeeAsync(employeesMock.Id)).Returns(async () => response);
+            _serviceMock.Setup(x => x.GetEmployeeAsync(employeesMock.Id)).Returns(() => Task.FromResult(response));
 
             //Act
             var result = await _sut.Get(employeesMock.Id).ConfigureAwait(false);
@@ -108,7 +108,7 @@ namespace XUnitTest.Controller
         {
             //Arrange
             var employeesMock = _fixture.Create<Employee>();
-            _serviceMock.Setup(x => x.GetEmployeeAsync(employeesMock.Id)).Returns(async () => employeesMock);
+            _serviceMock.Setup(x => x.GetEmployeeAsync(employeesMock.Id)).Returns(() => Task.FromResult(employeesMock));
             employeesMock.Id = null;
 
             //Act
@@ -125,7 +125,7 @@ namespace XUnitTest.Controller
         {
             //Arrange
             var employeesMock = _fixture.Create<Employee>();
-            _serviceMock.Setup(x => x.CreateEmployeeAsync(employeesMock)).Returns(async () => employeesMock);
+            _serviceMock.Setup(x => x.CreateEmployeeAsync(employeesMock)).Returns(() => Task.FromResult(employeesMock));
 
             //Act
             var result = await _sut.Post(employeesMock).ConfigureAwait(false);
@@ -142,7 +142,7 @@ namespace XUnitTest.Controller
             //Arrange
             var employeesMock = _fixture.Create<Employee>();
             employeesMock.EmployeeName = null;
-            _serviceMock.Setup(x => x.CreateEmployeeAsync(employeesMock)).Returns(async () => employeesMock);
+            _serviceMock.Setup(x => x.CreateEmployeeAsync(employeesMock)).Returns(() => Task.FromResult(employeesMock));
 
             //Act
             var result = await _sut.Post(employeesMock).ConfigureAwait(false);
@@ -159,7 +159,7 @@ namespace XUnitTest.Controller
             //Arrange
             var employeesMock = _fixture.Create<Employee>();
             var updatedEmployeesMock = _fixture.Create<Employee>();
-            _serviceMock.Setup(x => x.UpdateEmployeeAsync(employeesMock.Id, updatedEmployeesMock)).Returns(async () => updatedEmployeesMock);
+            _serviceMock.Setup(x => x.UpdateEmployeeAsync(employeesMock.Id, updatedEmployeesMock)).Returns(() => Task.FromResult(updatedEmployeesMock));
 
             //Act
             var result = await _sut.Update(employeesMock.Id, updatedEmployeesMock).ConfigureAwait(false);
@@ -176,7 +176,7 @@ namespace XUnitTest.Controller
             //Arrange
             var employeesMock = _fixture.Create<Employee>();
             var updatedEmployeesMock = _fixture.Create<Employee>();
-            _serviceMock.Setup(x => x.UpdateEmployeeAsync(employeesMock.Id, updatedEmployeesMock)).Returns(async () => updatedEmployeesMock);
+            _serviceMock.Setup(x => x.UpdateEmployeeAsync(employeesMock.Id, updatedEmployeesMock)).Returns(() => Task.FromResult(updatedEmployeesMock));
             employeesMock.Id = null;
 
             //Act
@@ -194,7 +194,7 @@ namespace XUnitTest.Controller
             //Arrange
             var employeesMock = _fixture.Create<Employee>();
             var updatedEmployeesMock = _fixture.Create<Employee>();
-            _serviceMock.Setup(x => x.UpdateEmployeeAsync(employeesMock.Id, updatedEmployeesMock)).Returns(async () => updatedEmployeesMock);
+            _serviceMock.Setup(x => x.UpdateEmployeeAsync(employeesMock.Id, updatedEmployeesMock)).Returns(() => Task.FromResult(updatedEmployeesMock));
             updatedEmployeesMock = null;
 
             //Act
@@ -213,7 +213,7 @@ namespace XUnitTest.Controller
             var employeesMock = _fixture.Create<Employee>();
             var updatedEmployeesMock = _fixture.Create<Employee>();
             updatedEmployeesMock.EmployeeName = null;
-            _serviceMock.Setup(x => x.UpdateEmployeeAsync(employeesMock.Id, updatedEmployeesMock)).Returns(async () => updatedEmployeesMock);
+            _serviceMock.Setup(x => x.UpdateEmployeeAsync(employeesMock.Id, updatedEmployeesMock)).Returns(() => Task.FromResult(updatedEmployeesMock));
 
             //Act
             var result = await _sut.Update(employeesMock.Id, updatedEmployeesMock).ConfigureAwait(false);
@@ -229,7 +229,7 @@ namespace XUnitTest.Controller
         {
             //Arrange
             var employeesMock = _fixture.Create<Employee>();
-            _serviceMock.Setup(x => x.DeleteEmployeeAsync(employeesMock.Id)).Returns(async () => employeesMock);
+            _serviceMock.Setup(x => x.DeleteEmployeeAsync(employeesMock.Id)).Returns(() => Task.FromResult(employeesMock));
 
             //Act
             var result = await _sut.Delete(employeesMock).ConfigureAwait(false);
@@ -246,7 +246,7 @@ namespace XUnitTest.Controller
             //Arrange
             var employeesMock = _fixture.Create<Employee>();
             var _employeesMock = employeesMock;
-            _serviceMock.Setup(x => x.DeleteEmployeeAsync(employeesMock.Id)).Returns(async () => employeesMock);
+            _serviceMock.Setup(x => x.DeleteEmployeeAsync(employeesMock.Id)).Returns(() => Task.FromResult(employeesMock));
             employeesMock = null;
 
             //Act
@@ -264,7 +264,7 @@ namespace XUnitTest.Controller
             //Arrange
             var employeesMock = _fixture.Create<Employee>();
             var _employeesMock = employeesMock;
-            _serviceMock.Setup(x => x.DeleteEmployeeAsync(employeesMock.Id)).Returns(async () => employeesMock);
+            _serviceMock.Setup(x => x.DeleteEmployeeAsync(employeesMock.Id)).Returns(() => Task.FromResult(employeesMock));
             employeesMock.Id = null;
 
             //Act
