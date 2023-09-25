@@ -162,7 +162,7 @@ namespace XUnitTest.Controller
             _serviceMock.Setup(x => x.UpdateEmployeeAsync(employeesMock.Id, updatedEmployeesMock)).Returns(async () => updatedEmployeesMock);
 
             //Act
-            var result = await _sut.Update(employeesMock, updatedEmployeesMock).ConfigureAwait(false);
+            var result = await _sut.Update(employeesMock.Id, updatedEmployeesMock).ConfigureAwait(false);
 
             //Assert
             Assert.NotNull(employeesMock);
@@ -177,10 +177,10 @@ namespace XUnitTest.Controller
             var employeesMock = _fixture.Create<Employee>();
             var updatedEmployeesMock = _fixture.Create<Employee>();
             _serviceMock.Setup(x => x.UpdateEmployeeAsync(employeesMock.Id, updatedEmployeesMock)).Returns(async () => updatedEmployeesMock);
-            employeesMock = null;
+            employeesMock.Id = null;
 
             //Act
-            var result = await _sut.Update(employeesMock, updatedEmployeesMock).ConfigureAwait(false);
+            var result = await _sut.Update(employeesMock.Id, updatedEmployeesMock).ConfigureAwait(false);
 
             //Assert
             Assert.NotNull(updatedEmployeesMock);
@@ -198,7 +198,7 @@ namespace XUnitTest.Controller
             updatedEmployeesMock = null;
 
             //Act
-            var result = await _sut.Update(employeesMock, updatedEmployeesMock).ConfigureAwait(false);
+            var result = await _sut.Update(employeesMock.Id, updatedEmployeesMock).ConfigureAwait(false);
 
             //Assert
             Assert.NotNull(employeesMock);
@@ -216,7 +216,7 @@ namespace XUnitTest.Controller
             _serviceMock.Setup(x => x.UpdateEmployeeAsync(employeesMock.Id, updatedEmployeesMock)).Returns(async () => updatedEmployeesMock);
 
             //Act
-            var result = await _sut.Update(employeesMock, updatedEmployeesMock).ConfigureAwait(false);
+            var result = await _sut.Update(employeesMock.Id, updatedEmployeesMock).ConfigureAwait(false);
 
             //Assert
             Assert.NotNull(employeesMock);
