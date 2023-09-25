@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Colleak_Back_end.Controllers
 {
 
-    [Route("/")]
+    [Route("/api/[controller]")]
     [ApiController]
     public class EmployeesController : ControllerBase
     {
