@@ -53,5 +53,5 @@ jobs:
         with:
           app-name: 'colleak-back-end'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_FF6AA5812FCF4FAD8872FD52663F5C38 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_B7B0A17732AC45FD96193C5885C9AE0E }}
           package: .
