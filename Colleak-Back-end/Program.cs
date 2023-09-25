@@ -16,19 +16,23 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.ConfigureSwaggerGen(setup =>
+{
+    setup.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "Employees controller",
+        Version = "v1"
+    });
+});
+
 builder.Services.AddScoped<IEmployeesService, EmployeesService>();  
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.UseSwagger();
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-if (app.Environment.IsProduction())
-{
-    app.UseSwagger();
     app.UseSwaggerUI();
 }
 
