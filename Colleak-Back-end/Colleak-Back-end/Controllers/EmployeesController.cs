@@ -53,9 +53,9 @@ namespace Colleak_Back_end.Controllers
         }
 
         [HttpPut("{id:length(24)}")]
-        public async Task<ActionResult> Update(Employee oldEmployee, Employee updatedEmployee)
+        public async Task<ActionResult> Update(string id, Employee updatedEmployee)
         {
-            if (oldEmployee is null || updatedEmployee is null)
+            if (id is null || updatedEmployee is null)
             {
                 return BadRequest();
             }
@@ -64,9 +64,9 @@ namespace Colleak_Back_end.Controllers
                 return BadRequest();
             }
 
-            updatedEmployee.Id = oldEmployee.Id;
+            updatedEmployee.Id = id;
 
-            await _iEmployeesService.UpdateEmployeeAsync(oldEmployee.Id, updatedEmployee);
+            await _iEmployeesService.UpdateEmployeeAsync(id, updatedEmployee);
 
             return Ok();
         }
