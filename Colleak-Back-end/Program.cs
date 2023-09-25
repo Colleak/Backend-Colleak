@@ -2,6 +2,9 @@ using Colleak_Back_end.Interfaces;
 using Colleak_Back_end.Models;
 using Colleak_Back_end.Services;
 using System;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
+using Azure.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,5 +44,23 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+SecretClientOptions options = new SecretClientOptions()
+{
+    Retry =
+        {
+            Delay= TimeSpan.FromSeconds(2),
+            MaxDelay = TimeSpan.FromSeconds(16),
+            MaxRetries = 5,
+            Mode = RetryMode.Exponential
+         }
+};
+var client = new SecretClient(new Uri("https://colleak-dbcs.vault.azure.net/"), new DefaultAzureCredential(), options);
+
+KeyVaultSecret secret = client.GetSecret("DBConnectionString");
+
+string secretValue = secret.Value;
+
+app.MapGet("/", () => secretValue);
 
 app.Run();
