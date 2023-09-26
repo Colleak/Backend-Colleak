@@ -12,16 +12,7 @@ using MongoDB.Bson;
 
 var builder = WebApplication.CreateBuilder(args);
 
-SecretClientOptions options = new SecretClientOptions()
-{
-    Retry =
-        {
-            Delay= TimeSpan.FromSeconds(2),
-            MaxDelay = TimeSpan.FromSeconds(16),
-            MaxRetries = 5,
-            Mode = RetryMode.Exponential
-         }
-};
+SecretClientOptions options = new SecretClientOptions();
 var client = new SecretClient(new Uri("https://colleakdatabase.vault.azure.net/"), new DefaultAzureCredential(), options);
 
 KeyVaultSecret ConnectionString = client.GetSecret("ConnectionString");
@@ -54,10 +45,13 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.UseSwagger();
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwaggerUI();
-}
+app.UseSwaggerUI();
+
+app.UseCors(x => x
+                .WithOrigins("http://localhost:3000")
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials());
 
 app.UseHttpsRedirection();
 
