@@ -19,11 +19,6 @@ KeyVaultSecret ConnectionString = client.GetSecret("ConnectionString");
 KeyVaultSecret DatabaseName = client.GetSecret("DatabaseName");
 KeyVaultSecret EmployeeCollectionName = client.GetSecret("EmployeeCollectionName");
 
-List<string> secretValue = new List<string>();
-secretValue.Add(ConnectionString.Value);
-secretValue.Add(DatabaseName.Value);
-secretValue.Add(EmployeeCollectionName.Value);
-
 // Add services to the container.
 //builder.Services.Configure<ColleakDatabaseSettings>(
 //    builder.Configuration.GetSection("ColleakDatabase"));
@@ -58,7 +53,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
-//app.MapGet("/", () => secretValue);
 
 app.Run();
