@@ -10,16 +10,16 @@ namespace Colleak_Back_end.Services
         private readonly IMongoCollection<Employee> _employeesCollection;
 
         public EmployeesService(
-            IOptions<ColleakDatabaseSettings> colleakDatabaseSettings)
+            /*IOptions<ColleakDatabaseSettings> colleakDatabaseSettings*/)
         {
             var mongoClient = new MongoClient(
-            colleakDatabaseSettings.Value.ConnectionString);
+            ColleakDatabaseSettings.ConnectionString);
 
             var mongoDatabase = mongoClient.GetDatabase(
-                colleakDatabaseSettings.Value.DatabaseName);
+                ColleakDatabaseSettings.DatabaseName);
 
             _employeesCollection = mongoDatabase.GetCollection<Employee>(
-                colleakDatabaseSettings.Value.EmployeeCollectionName);
+                ColleakDatabaseSettings.EmployeeCollectionName);
         }
 
         public async Task<List<Employee>> GetEmployeeAsync() =>

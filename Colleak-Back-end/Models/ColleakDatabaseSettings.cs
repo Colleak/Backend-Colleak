@@ -1,11 +1,11 @@
 ﻿namespace Colleak_Back_end.Models
 {
-    public class ColleakDatabaseSettings
+    public static class ColleakDatabaseSettings
     {
-        public string ConnectionString { get; set; } = null!;
+        public static string ConnectionString { get; set; } = null!;
 
-        public string DatabaseName { get; set; } = null!;
+        public static string DatabaseName { get; set; } = null!;
 
-        public string EmployeeCollectionName { get; set; } = null!;
+        public static string EmployeeCollectionName { get; set; } = null!;
     }
 }
