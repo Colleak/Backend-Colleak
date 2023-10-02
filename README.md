@@ -13,7 +13,7 @@ The Back end is made by:
 ## how to start the program
 To run the Visual studio app, open the correct project and press f5.
 
-dont forget to add the ConnectionString to your user secret.
+Dont forget to add the ConnectionString to your user secret.
 ## End-points 
 Our Services:
 - GET/api/Employees
