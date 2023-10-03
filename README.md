@@ -21,14 +21,13 @@ In het begin van ons project hebben wij gebruikgemaakt van user secrets in visua
 in de applicatie gebruiken zonder dat deze kwetsbaar is voor datalekken. Zo wordt de connectionstring niet opgeslagen in Github.
 Een nadeel hiervan was dat de user secrets bij iedereen handmatig aangemaakt en toegevoegd moesten worden.
 
-Uiteindelijk hebben wij onze applicatie gedployed op Azure, en moesten we een alternatief zoeken voor de user secrets.
+Uiteindelijk hebben wij onze applicatie gedeployed op Azure, en moesten we een alternatief zoeken voor de user secrets.
 Gelukkig heeft Azure hier zijn eigen functionaliteit voor: De Azure keys. Dit is een soortgelijke functie als de user secrets in Visual studio,
-Maar alleen binnen Azure zelf. Maar omdat de back-end is gedployed kan iedereen hier gebruik van maken zonder dat de connectionstring kwetsbaar is.
+Maar alleen binnen Azure zelf. Maar omdat de back-end is gedeployed kan iedereen hier gebruik van maken zonder dat de connectionstring kwetsbaar is.
 
-## Starten van het programma
-Om de Visual Studio app te openen, open het juiste project en druk op f5.
-
-Vergeet niet om de connectionstring toe te voegen aan de user secrets.
+## Lokaal starten van het programma
+Bij he eerste lokale gebruik van de applicatie is het noodzakelijk om de repository te clonen. Belangrijk hierbij is om van de dev-branch een nieuwe branch aan te maken met de naam
+van de nieuwe feature of user story als er nieuwe code wordt toegevoegd. Nadat dit is gefetched is handig om deze te builden voordat je de applicatie start.
 
 ## End-points 
 Onze Services:
