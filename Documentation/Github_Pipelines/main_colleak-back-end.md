@@ -1,0 +1,1 @@
+De workflow "main_colleak-back-end" zorgt ervoor dat er een build gemaakt wordt van de repository op de main branch. Nadat de build goed is gemaakt wordt de build gedeployed naar Azure die verbonden is met de repository.
