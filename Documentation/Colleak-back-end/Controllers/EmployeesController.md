@@ -1,6 +1,7 @@
 De EmployeesController bevat de endpoints waarbij de CRUD acties kunnen worden uitgevoerd voor de Employees.
 
-De standaard URl is: https://colleak-back-end.azurewebsites.net/
+De standaard localhost URL is: https://localhost:7025/
+De standaard cloud URl is: https://colleak-back-end.azurewebsites.net/
 
 Achter de standaard URl kunnen verschillende endpoints worden geplaats met de verschillende CRUD(Create, Read, Update, Delete) aanvragen.
 De verschillende endpoints zijn:
