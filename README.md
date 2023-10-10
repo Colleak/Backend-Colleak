@@ -5,7 +5,7 @@ The Back end is made by:
 - Lean Meegdes
 - Jelle Manders
 - Jimmy Schuurmans
-- Teun Hurkmans
+- Teun Hurkmans 0634998928
 - Ramon Peeters
 - Jaimy Derks
 - Art Nooijen
