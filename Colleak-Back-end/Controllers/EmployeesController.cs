@@ -26,17 +26,9 @@ namespace Colleak_Back_end.Controllers
         [HttpGet("locationtrackedEmployees")]
         public async Task<ActionResult<List<Employee>>> GetTrackedEmployees()
         {
-            var employees = await _iEmployeesService.GetEmployeeAsync();
-            List<Employee> trackedEmployees = new List<Employee>();
-            foreach (var employee in employees)
-            {
-                if (employee.AllowLocationTracking == true)
-                {
-                    trackedEmployees.Add(employee);
-                }
-            }
+            var employees = await _iEmployeesService.GetTrackedEmployeesAsync();
 
-            return trackedEmployees != null ? Ok(trackedEmployees) : NotFound();
+            return employees != null ? Ok(employees) : NotFound();
         }
 
         [HttpGet("{id:length(24)}")]
