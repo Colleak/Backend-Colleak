@@ -10,5 +10,7 @@ namespace Colleak_Back_end.Models
         public string? Id { get; set; }
 
         public string EmployeeName { get; set; } = null!;
+
+        public bool? AllowLocationTracking { get; set; }
     }
 }

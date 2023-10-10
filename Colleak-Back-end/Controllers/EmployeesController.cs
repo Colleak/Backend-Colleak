@@ -23,6 +23,14 @@ namespace Colleak_Back_end.Controllers
             return employees != null ? Ok(employees) : NotFound();
         }
 
+        [HttpGet("locationtrackedEmployees")]
+        public async Task<ActionResult<List<Employee>>> GetTrackedEmployees()
+        {
+            var employees = await _iEmployeesService.GetTrackedEmployeesAsync();
+
+            return employees != null ? Ok(employees) : NotFound();
+        }
+
         [HttpGet("{id:length(24)}")]
         public async Task<ActionResult<Employee>> Get(string id)
         {

@@ -5,6 +5,7 @@ namespace Colleak_Back_end.Interfaces
     public interface IEmployeesService
     {
         Task<List<Employee>> GetEmployeeAsync();
+        Task<List<Employee>> GetTrackedEmployeesAsync();
 
         Task<Employee?> GetEmployeeAsync(string id);
 

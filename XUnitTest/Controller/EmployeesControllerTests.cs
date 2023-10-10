@@ -66,6 +66,43 @@ namespace XUnitTest.Controller
         }
 
         [Fact]
+        public async Task GetTrackedEmployees_ShouldReturnOkResponse_WhenDataFound()
+        {
+            //Arrange
+            var employeesMock = _fixture.Create<List<Employee>>();
+            _serviceMock.Setup(x => x.GetTrackedEmployeesAsync()).Returns(() => Task.FromResult(employeesMock));
+
+            //Act
+            var result = await _sut.GetTrackedEmployees().ConfigureAwait(false);
+
+            //Assert
+            Assert.NotNull(result);
+            result.Should().NotBeNull();
+            result.Should().BeAssignableTo<ActionResult<List<Employee>>>();
+            result.Result.Should().BeAssignableTo<OkObjectResult>();
+        }
+
+        [Fact]
+        public async Task GetTrackedEmployees_ShouldReturnNotFound_WhenDataNotFound()
+        {
+            //Arrange
+            var employeesMock = _fixture.Create<List<Employee>>();
+            foreach (var employee in employeesMock)
+            {
+                employee.AllowLocationTracking = false;
+            }
+            _serviceMock.Setup(x => x.GetTrackedEmployeesAsync()).Returns(() => Task.FromResult(employeesMock));
+
+            //Act
+            var result = await _sut.Get().ConfigureAwait(false);
+
+            //Assert
+            Assert.NotNull(result);
+            result.Should().NotBeNull();
+            result.Result.Should().BeAssignableTo<NotFoundResult>();
+        }
+
+        [Fact]
         public async Task GetEmployeeById_ShouldReturnOkResponse_WhenValidInput()
         {
             //Arrange
