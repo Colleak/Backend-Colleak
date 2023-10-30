@@ -9,6 +9,7 @@ De verschillende endpoints zijn:
 | Endpoint | Actie |
 | ---------------- | --------------- |
 | {GET}/api/Employees | vraag alle Employees op |
+| {GET}/api/Employees/locationtrackedEmployees | vraag alle Employees op waar de AllowLocationTracking variabele op true staat |
 | {GET}/api/Employees/{Id} | Vraag naar een specifieke Employee met een Id |
 | {POST}/api/Employees | Maak een nieuwe Employee aan met de meegegeven data |
 | {PUT}/api/Employees/{Id} | Pas een Employee aan met de meegegeven data |
