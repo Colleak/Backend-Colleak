@@ -25,6 +25,9 @@ namespace Colleak_Back_end.Services
         public async Task<List<Employee>> GetEmployeeAsync() =>
             await _employeesCollection.Find(_ => true).ToListAsync();
 
+        public async Task<List<Employee>> GetTrackedEmployeesAsync() =>
+            await _employeesCollection.Find(x => x.AllowLocationTracking == true).ToListAsync();
+
         public async Task<Employee?> GetEmployeeAsync(string id) =>
             await _employeesCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
@@ -36,5 +39,7 @@ namespace Colleak_Back_end.Services
 
         public async Task DeleteEmployeeAsync(string id) =>
             await _employeesCollection.DeleteOneAsync(x => x.Id == id);
+
+        
     }
 }
