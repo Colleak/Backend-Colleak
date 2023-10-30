@@ -5,3 +5,5 @@ Als de employee nieuwe variabelen krijgt, moeten deze ook worden gedefineerd, me
 Employee bestaat uit:
 - string?: Id
 - string: EmployeeName
+- string?: AllowLocationTracking
+- string?: ConnectedRouterName
