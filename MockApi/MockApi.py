@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
+is_available = True
 @app.route('/send_message', methods=['POST'])
 def send_message():
     data = request.json
@@ -36,6 +37,29 @@ def Send_ping():
 
     return jsonify({"status": "success", "message": "User pinged successfully"})
 
+
+Not_Available_Array = [11,12,13]
+
+@app.route('/available', methods=['POST'])
+def is_person_available():
+    data = request.json
+    sender_id = data.get('sender_id')
+    request_time = int(data.get('request_time'))  # Convert request_time to integer
+    receiver_id = data.get('receiver_id')
+    sender_name = data.get('sender_name')
+    receiver_name = data.get('receiver_name')
+
+    is_available = True  # Initialize is_available to True
+
+    if request_time in Not_Available_Array:
+        is_available = False
+
+    if is_available:
+        print(f"{sender_name}({sender_id}) is available. Send to: {receiver_name}({receiver_id}) at {request_time}")
+        return jsonify({"status": "success", "message": "User is available"})
+    else:
+        print(f"{receiver_name}({receiver_id}) is not available at {request_time}")
+        return jsonify({"status": "error", "message": "User is not available"})
 
 if __name__ == '__main__':
     app.run(debug=True, port=8001)
