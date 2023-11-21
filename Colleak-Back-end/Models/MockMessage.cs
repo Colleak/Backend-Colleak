@@ -8,6 +8,6 @@
         public string receiver_id { get; set; }
         public string message { get; set; }
         public int request_time { get; set; }
-        public bool disturb { get; set; }
+        public string disturb { get; set; }
     }
 }
