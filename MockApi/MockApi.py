@@ -36,7 +36,7 @@ def send_message():
     receiver_name = data['receiver_name']
 
     logging.info(f"Message from {sender_name}({sender_id}) to {receiver_name}({receiver_id}): {message}")
-    return jsonify({"status": "success", "message": message}),200
+    return jsonify({"status": "success", "message": "This message has been send: " + message}),200
 
 @app.route('/send_ping', methods=['POST'])
 def send_ping():
