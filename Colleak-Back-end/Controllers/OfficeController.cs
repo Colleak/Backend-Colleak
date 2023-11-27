@@ -10,7 +10,7 @@ namespace Colleak_Back_end.Controllers
     [ApiController]
     public class OfficeController : ControllerBase
     {
-        private readonly string mockAPIAdress = "artofghost.pythonanywhere.com";
+        private readonly string mockAPIAdress = "http://artofghost.pythonanywhere.com";
         private readonly IHttpClientFactory _clientFactory;
 
         public OfficeController()
