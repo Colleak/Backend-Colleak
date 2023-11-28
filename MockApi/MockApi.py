@@ -22,9 +22,10 @@ def validate_input(data, required_fields):
     if missing_fields:
         return False, f"Missing fields: {', '.join(missing_fields)}"
     return True, ""
+
 @app.route('/', methods=['GET'])
 def Hello():
-    test = "Hello World"
+    test = "Welcome to Colleaks Mock API"
     return test
 
 @app.route('/send_message', methods=['POST'])
@@ -59,6 +60,21 @@ def send_ping():
     logging.info(f"{sender_name}({sender_id}) {message} Send to: {receiver_name}({receiver_id})")
     return jsonify({"status": "success", "message": "User pinged successfully"})
 
+@app.route('/send_call', methods=['POST'])
+def send_call():
+    data = request.json
+    # Validate input
+    valid, error_message = validate_input(data, ['sender_id', 'receiver_id', 'sender_name', 'receiver_name'])
+    if not valid:
+        return jsonify({"status": "error", "message": error_message}), 400
+
+    caller_id = data['sender_id']
+    receiver_id = data['receiver_id']
+    caller_name = data['sender_name']
+    receiver_name = data['receiver_name']
+
+    logging.info(f"Call from {caller_name}({caller_id}) to {receiver_name}({receiver_id})")
+    return jsonify({"status": "success", "message": "Call initiated"}), 200
 
 Not_Available_Array = [11, 12, 13, 18, 19]
 date =  datetime.datetime.now()
@@ -67,16 +83,12 @@ current_hour = date.hour
 @app.route('/atm_available', methods=['POST'])
 def is_person_atm_available():
     data = request.json
-    valid, error_message = validate_input(data, ['receiver_id', 'receiver_name', 'request_time'])
+    valid, error_message = validate_input(data, ['receiver_id', 'receiver_name'])
     if not valid:
         return jsonify({"status": "error", "message": error_message}), 400
 
-
-
     receiver_id = data['receiver_id']
     request_time = int(current_hour)
-
-
     receiver_name = data['receiver_name']
 
     is_available = request_time not in Not_Available_Array
