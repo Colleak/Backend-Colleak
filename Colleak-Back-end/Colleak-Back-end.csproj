@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Colleak_Back_end</RootNamespace>
     <UserSecretsId>f32288bb-ba20-4ada-8dee-f52c2d864f0c</UserSecretsId>
