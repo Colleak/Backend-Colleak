@@ -83,14 +83,14 @@ namespace Colleak_Back_end.Controllers
             return await PostRequest(mockAPIUrl, content);
         }
 
-        [HttpGet("on_location")]
+        [HttpPost("on_location")]
         public async Task<ActionResult> GetOn_Location(MockMessage data)
         {
             var mockAPIUrl = mockAPIAdress + "/on_location";
 
             var content = CreateStringContent(data);
 
-            return await GetRequest(mockAPIUrl, content);
+            return await PostRequest(mockAPIUrl, content);
         }
         [HttpPost("disturb")]
         public async Task<ActionResult> PostDisturb(MockMessage data)
@@ -177,33 +177,7 @@ namespace Colleak_Back_end.Controllers
                 // Log the exception details
                 return StatusCode(500, "Internal server error: " + ex.Message);
             }
-        }
-        private async Task<ActionResult> GetRequest(string mockAPIUrl, StringContent content)
-        {
-            var client = new HttpClient();
-
-            try
-            {
-                var response = await client.GetAsync(mockAPIUrl);
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseContent = await response.Content.ReadAsStringAsync();
-                    // Optionally deserialize if you need to process the response
-                    // var responseData = JsonConvert.DeserializeObject<YourResponseType>(responseContent);
-                    return Ok(responseContent);
-                }
-                else
-                {
-                    return StatusCode((int)response.StatusCode, "Error occurred during the API call");
-                }
-            }
-            catch (HttpRequestException ex)
-            {
-                // Log the exception details
-                return StatusCode(500, "Internal server error: " + ex.Message);
-            }
-        }
-
+        }        
         private Task<Employee?> GetName(string id)
         {
             Task<Employee?> result = _iEmployeesService.GetEmployeeAsync(id);
