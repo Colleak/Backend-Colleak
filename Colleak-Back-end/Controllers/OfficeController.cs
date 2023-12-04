@@ -83,22 +83,14 @@ namespace Colleak_Back_end.Controllers
             return await PostRequest(mockAPIUrl, content);
         }
 
-        [HttpPost("available")]
-        public async Task<ActionResult> PostAvailable(MockMessage data)
+        [HttpGet("on_location")]
+        public async Task<ActionResult> GetOn_Location(MockMessage data)
         {
-            MockMessage usedMockMessage = defaultMessage;
+            var mockAPIUrl = mockAPIAdress + "/on_location";
 
-            Task<Employee> sender = GetName(data.sender_id);
-            Task<Employee> receiver = GetName(data.receiver_id);
+            var content = CreateStringContent(data);
 
-            usedMockMessage.sender_name = sender.Result.EmployeeName;
-            usedMockMessage.receiver_name = receiver.Result.EmployeeName;
-
-            var mockAPIUrl = mockAPIAdress + "/available";
-
-            var content = CreateStringContent(usedMockMessage);
-
-            return await PostRequest(mockAPIUrl, content);
+            return await GetRequest(mockAPIUrl, content);
         }
         [HttpPost("disturb")]
         public async Task<ActionResult> PostDisturb(MockMessage data)
@@ -112,6 +104,32 @@ namespace Colleak_Back_end.Controllers
             usedMockMessage.receiver_name = receiver.Result.EmployeeName;
 
             var mockAPIUrl = mockAPIAdress + "/disturb";
+
+            var content = CreateStringContent(usedMockMessage);
+
+            return await PostRequest(mockAPIUrl, content);
+        }
+        [HttpPost("set_location")]
+        public async Task<ActionResult> PostSetLocation(MockMessage data)
+        {
+            var mockAPIUrl = mockAPIAdress + "/set_location";
+
+            var content = CreateStringContent(data);
+
+            return await PostRequest(mockAPIUrl, content);
+        }
+        [HttpPost("available")]
+        public async Task<ActionResult> PostAvailable(MockMessage data)
+        {
+            MockMessage usedMockMessage = defaultMessage;
+
+            Task<Employee> sender = GetName(data.sender_id);
+            Task<Employee> receiver = GetName(data.receiver_id);
+
+            usedMockMessage.sender_name = sender.Result.EmployeeName;
+            usedMockMessage.receiver_name = receiver.Result.EmployeeName;
+
+            var mockAPIUrl = mockAPIAdress + "/available";
 
             var content = CreateStringContent(usedMockMessage);
 
@@ -134,23 +152,6 @@ namespace Colleak_Back_end.Controllers
 
             return await PostRequest(mockAPIUrl, content);
         }
-        [HttpPost("is_on_location")]
-        public async Task<ActionResult> PostIsOnLocation(MockMessage data)
-        {
-            MockMessage usedMockMessage = defaultMessage;
-
-            Task<Employee> sender = GetName(data.sender_id);
-            Task<Employee> receiver = GetName(data.receiver_id);
-
-            usedMockMessage.sender_name = sender.Result.EmployeeName;
-            usedMockMessage.receiver_name = receiver.Result.EmployeeName;
-
-            var mockAPIUrl = mockAPIAdress + "/is_on_location";
-
-            var content = CreateStringContent(usedMockMessage);
-
-            return await PostRequest(mockAPIUrl, content);
-        }
 
         private async Task<ActionResult> PostRequest(string mockAPIUrl, StringContent content)
         {
@@ -159,6 +160,31 @@ namespace Colleak_Back_end.Controllers
             try
             {
                 var response = await client.PostAsync(mockAPIUrl, content);
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    // Optionally deserialize if you need to process the response
+                    // var responseData = JsonConvert.DeserializeObject<YourResponseType>(responseContent);
+                    return Ok(responseContent);
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, "Error occurred during the API call");
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                // Log the exception details
+                return StatusCode(500, "Internal server error: " + ex.Message);
+            }
+        }
+        private async Task<ActionResult> GetRequest(string mockAPIUrl, StringContent content)
+        {
+            var client = new HttpClient();
+
+            try
+            {
+                var response = await client.GetAsync(mockAPIUrl);
                 if (response.IsSuccessStatusCode)
                 {
                     var responseContent = await response.Content.ReadAsStringAsync();
