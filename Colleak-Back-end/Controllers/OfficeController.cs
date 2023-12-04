@@ -14,7 +14,8 @@ namespace Colleak_Back_end.Controllers
 
         private readonly IEmployeesService _iEmployeesService;
 
-        private readonly MockMessage defaultMessage = new MockMessage("SN", "RN", "SI", "RI", "Default message", 11, "true");
+        private readonly MockMessage defaultMessage = new MockMessage("SN", "RN", "652551bdb82d091daccff161", "652551bdb82d091daccff161", "Default message", 
+            11/*verander dit naar 10 om een andere response te krijgen*/, "true", "true");
 
         public OfficeController(IEmployeesService iEmployeesService)
         {
@@ -24,7 +25,7 @@ namespace Colleak_Back_end.Controllers
         [HttpGet]
         public async Task<ActionResult<string>> GetHelloWorld()
         {
-            return "Hello wordl!!";
+            return "Hello world!!";
         }
 
         [HttpPost("sendmessage")]
@@ -32,8 +33,11 @@ namespace Colleak_Back_end.Controllers
         {
             MockMessage usedMockMessage = defaultMessage;
 
-            usedMockMessage.sender_name = GetName(data.sender_id).ToString();
-            usedMockMessage.receiver_name = GetName(data.receiver_id).ToString();
+            Task<Employee> sender = GetName(data.sender_id);
+            Task<Employee> receiver = GetName(data.receiver_id);
+
+            usedMockMessage.sender_name = sender.Result.EmployeeName;
+            usedMockMessage.receiver_name = receiver.Result.EmployeeName;
             usedMockMessage.message = data.message;
 
             var mockAPIUrl = mockAPIAdress + "/send_message";
@@ -48,8 +52,11 @@ namespace Colleak_Back_end.Controllers
         {
             MockMessage usedMockMessage = defaultMessage;
 
-            usedMockMessage.sender_name = GetName(data.sender_id).ToString();
-            usedMockMessage.receiver_name = GetName(data.receiver_id).ToString();
+            Task<Employee> sender = GetName(data.sender_id);
+            Task<Employee> receiver = GetName(data.receiver_id);
+
+            usedMockMessage.sender_name = sender.Result.EmployeeName;
+            usedMockMessage.receiver_name = receiver.Result.EmployeeName;
 
             var mockAPIUrl = mockAPIAdress + "/send_ping";
 
@@ -63,8 +70,11 @@ namespace Colleak_Back_end.Controllers
         {
             MockMessage usedMockMessage = defaultMessage;
 
-            usedMockMessage.sender_name = GetName(data.sender_id).ToString();
-            usedMockMessage.receiver_name = GetName(data.receiver_id).ToString();
+            Task<Employee> sender = GetName(data.sender_id);
+            Task<Employee> receiver = GetName(data.receiver_id);
+
+            usedMockMessage.sender_name = sender.Result.EmployeeName;
+            usedMockMessage.receiver_name = receiver.Result.EmployeeName;
 
             var mockAPIUrl = mockAPIAdress + "/send_call";
 
@@ -73,13 +83,51 @@ namespace Colleak_Back_end.Controllers
             return await PostRequest(mockAPIUrl, content);
         }
 
+        [HttpGet("on_location")]
+        public async Task<ActionResult> GetOn_Location(MockMessage data)
+        {
+            var mockAPIUrl = mockAPIAdress + "/on_location";
+
+            var content = CreateStringContent(data);
+
+            return await GetRequest(mockAPIUrl, content);
+        }
+        [HttpPost("disturb")]
+        public async Task<ActionResult> PostDisturb(MockMessage data)
+        {
+            MockMessage usedMockMessage = defaultMessage;
+
+            Task<Employee> sender = GetName(data.sender_id);
+            Task<Employee> receiver = GetName(data.receiver_id);
+
+            usedMockMessage.sender_name = sender.Result.EmployeeName;
+            usedMockMessage.receiver_name = receiver.Result.EmployeeName;
+
+            var mockAPIUrl = mockAPIAdress + "/disturb";
+
+            var content = CreateStringContent(usedMockMessage);
+
+            return await PostRequest(mockAPIUrl, content);
+        }
+        [HttpPost("set_location")]
+        public async Task<ActionResult> PostSetLocation(MockMessage data)
+        {
+            var mockAPIUrl = mockAPIAdress + "/set_location";
+
+            var content = CreateStringContent(data);
+
+            return await PostRequest(mockAPIUrl, content);
+        }
         [HttpPost("available")]
         public async Task<ActionResult> PostAvailable(MockMessage data)
         {
             MockMessage usedMockMessage = defaultMessage;
 
-            usedMockMessage.sender_name = GetName(data.sender_id).ToString();
-            usedMockMessage.receiver_name = GetName(data.receiver_id).ToString();
+            Task<Employee> sender = GetName(data.sender_id);
+            Task<Employee> receiver = GetName(data.receiver_id);
+
+            usedMockMessage.sender_name = sender.Result.EmployeeName;
+            usedMockMessage.receiver_name = receiver.Result.EmployeeName;
 
             var mockAPIUrl = mockAPIAdress + "/available";
 
@@ -87,15 +135,18 @@ namespace Colleak_Back_end.Controllers
 
             return await PostRequest(mockAPIUrl, content);
         }
-        [HttpPost("disturb")]
-        public async Task<ActionResult> PostDisturb(MockMessage data)
+        [HttpPost("atm_available")]
+        public async Task<ActionResult> PostATMAvailable(MockMessage data)
         {
             MockMessage usedMockMessage = defaultMessage;
 
-            usedMockMessage.sender_name = GetName(data.sender_id).ToString();
-            usedMockMessage.receiver_name = GetName(data.receiver_id).ToString();
+            Task<Employee> sender = GetName(data.sender_id);
+            Task<Employee> receiver = GetName(data.receiver_id);
 
-            var mockAPIUrl = mockAPIAdress + "/disturb";
+            usedMockMessage.sender_name = sender.Result.EmployeeName;
+            usedMockMessage.receiver_name = receiver.Result.EmployeeName;
+
+            var mockAPIUrl = mockAPIAdress + "/atm_available";
 
             var content = CreateStringContent(usedMockMessage);
 
@@ -127,17 +178,37 @@ namespace Colleak_Back_end.Controllers
                 return StatusCode(500, "Internal server error: " + ex.Message);
             }
         }
-
-        private async Task<string?> GetName(string id)
+        private async Task<ActionResult> GetRequest(string mockAPIUrl, StringContent content)
         {
-            var result = await _iEmployeesService.GetEmployeeAsync(id);
+            var client = new HttpClient();
 
-            if (result == null)
+            try
             {
-                return "No name found";
+                var response = await client.GetAsync(mockAPIUrl);
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    // Optionally deserialize if you need to process the response
+                    // var responseData = JsonConvert.DeserializeObject<YourResponseType>(responseContent);
+                    return Ok(responseContent);
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, "Error occurred during the API call");
+                }
             }
+            catch (HttpRequestException ex)
+            {
+                // Log the exception details
+                return StatusCode(500, "Internal server error: " + ex.Message);
+            }
+        }
 
-            return result.EmployeeName;
+        private Task<Employee?> GetName(string id)
+        {
+            Task<Employee?> result = _iEmployeesService.GetEmployeeAsync(id);
+
+            return result;
         }
 
         private StringContent CreateStringContent(MockMessage data)
