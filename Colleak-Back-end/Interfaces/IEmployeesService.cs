@@ -6,6 +6,7 @@ namespace Colleak_Back_end.Interfaces
     {
         Task<List<Employee>> GetEmployeeAsync();
         Task<List<Employee>> GetTrackedEmployeesAsync();
+        Task<List<Employee>> GetConnectedToDeviceEmployeesAsync();
 
         Task<Employee?> GetEmployeeAsync(string id);
 

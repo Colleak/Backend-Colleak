@@ -28,7 +28,7 @@ namespace Colleak_Back_end.Controllers
             return "Hello world!!";
         }
 
-        [HttpPost("sendmessage")]
+        [HttpPost("send_message")]
         public async Task<ActionResult> PostSendMessage(MockMessage data)
         {
             MockMessage usedMockMessage = defaultMessage;
@@ -47,7 +47,7 @@ namespace Colleak_Back_end.Controllers
             return await PostRequest(mockAPIUrl, content);
         }
 
-        [HttpPost("sendping")]
+        [HttpPost("send_ping")]
         public async Task<ActionResult> PostSendPing(MockMessage data)
         {
             MockMessage usedMockMessage = defaultMessage;
@@ -65,7 +65,7 @@ namespace Colleak_Back_end.Controllers
             return await PostRequest(mockAPIUrl, content);
         }
 
-        [HttpPost("sendcall")]
+        [HttpPost("send_call")]
         public async Task<ActionResult> PostSendCall(MockMessage data)
         {
             MockMessage usedMockMessage = defaultMessage;
