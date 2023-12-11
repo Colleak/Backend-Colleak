@@ -25,6 +25,8 @@ KeyVaultSecret EmployeeCollectionName = client.GetSecret("EmployeeCollectionName
 
 
 builder.Services.AddSingleton<EmployeesService>();
+builder.Services.AddSingleton<RouterService>();
+
 ColleakDatabaseSettings.ConnectionString = ConnectionString.Value;
 ColleakDatabaseSettings.DatabaseName = DatabaseName.Value;
 ColleakDatabaseSettings.EmployeeCollectionName = EmployeeCollectionName.Value;
@@ -34,7 +36,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IEmployeesService, EmployeesService>();  
+builder.Services.AddScoped<IEmployeesService, EmployeesService>();
+builder.Services.AddScoped<IRouterService, RouterService>();
 
 var app = builder.Build();
 

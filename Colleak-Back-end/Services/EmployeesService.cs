@@ -28,6 +28,9 @@ namespace Colleak_Back_end.Services
         public async Task<List<Employee>> GetTrackedEmployeesAsync() =>
             await _employeesCollection.Find(x => x.AllowLocationTracking == true).ToListAsync();
 
+        public async Task<List<Employee>> GetConnectedToDeviceEmployeesAsync() =>
+            await _employeesCollection.Find(x => x.ConnectedToDevice == true).ToListAsync();
+
         public async Task<Employee?> GetEmployeeAsync(string id) =>
             await _employeesCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 

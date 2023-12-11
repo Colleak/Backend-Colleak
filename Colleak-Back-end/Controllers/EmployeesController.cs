@@ -11,9 +11,15 @@ namespace Colleak_Back_end.Controllers
     public class EmployeesController : ControllerBase
     {
         private readonly IEmployeesService _iEmployeesService;
+        private readonly IRouterService _iRouterService;
 
-        public EmployeesController(IEmployeesService iEmployeesService) =>
-        _iEmployeesService = iEmployeesService;
+        public EmployeesController(IEmployeesService iEmployeesService, IRouterService iRouterService) 
+        {
+            _iEmployeesService = iEmployeesService;
+            _iRouterService = iRouterService;
+        }
+
+        
 
         [HttpGet]
         public async Task<ActionResult<List<Employee>>> Get()
@@ -27,6 +33,13 @@ namespace Colleak_Back_end.Controllers
         public async Task<ActionResult<List<Employee>>> GetTrackedEmployees()
         {
             var employees = await _iEmployeesService.GetTrackedEmployeesAsync();
+
+            return employees != null ? Ok(employees) : NotFound();
+        }
+        [HttpGet("connectedtodevice")]
+        public async Task<ActionResult<List<Employee>>> GetConnectedToDeviceEmployees()
+        {
+            var employees = await _iEmployeesService.GetConnectedToDeviceEmployeesAsync();
 
             return employees != null ? Ok(employees) : NotFound();
         }
@@ -80,7 +93,7 @@ namespace Colleak_Back_end.Controllers
         }
 
         [HttpDelete("{id:length(24)}")]
-        public async Task<ActionResult> Delete(Employee deleteEmployee)
+        public async Task<ActionResult> Delete(string id, Employee deleteEmployee)
         {
             if (deleteEmployee is null || deleteEmployee.Id is null)
             {
@@ -91,5 +104,41 @@ namespace Colleak_Back_end.Controllers
 
             return Ok();
         }
+
+        [HttpGet("Getrouterinfo")]
+        public async Task<ActionResult<List<string>>> GetRouterInfo()
+        {
+            List<DeviceInfo> routerinfo = await _iRouterService.GetAllRouterInfo();
+
+            if (routerinfo == null) return NoContent();
+
+            List<string> macAddresses = new List<string>();
+            foreach (DeviceInfo item in routerinfo)
+            {
+                if (item.Mac != null)
+                {
+                    macAddresses.Add(item.Mac);
+                }
+            }
+            return macAddresses;
+        }
+
+        [HttpPut("{id:length(24)}/mac")]
+        public async Task<ActionResult<string>> UpdateMacAddress(string id, string macAddress)
+        {
+            if (null == id) return BadRequest();            
+            var employee = await _iEmployeesService.GetEmployeeAsync(id);
+            if (employee is null) return NotFound();            
+
+            if (employee.ConnectedDeviceMacAddress == macAddress) return Ok();
+
+            employee.ConnectedDeviceMacAddress = macAddress;
+            employee.ConnectedToDevice = true;
+            await _iEmployeesService.UpdateEmployeeAsync(id, employee);
+
+            return Ok();
+        }    
+        
+
     }
 }
