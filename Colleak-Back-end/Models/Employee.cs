@@ -9,10 +9,14 @@ namespace Colleak_Back_end.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
 
-        public string EmployeeName { get; set; } = null!;
+        public string? EmployeeName { get; set; } = null!;
 
         public bool? AllowLocationTracking { get; set; }
 
         public string? ConnectedRouterName { get; set; }
+
+        public string? ConnectedDeviceMacAddress { get; set; }
+
+        public bool? ConnectedToDevice { get; set; }
     }
 }
