@@ -13,16 +13,13 @@ namespace Colleak_Back_end.Services
         private readonly RouterService _iRouterService;
         private readonly EmployeesService _iEmployeeService;
 
-        private readonly UpdateRouterInfo _updateRouterInfo;
-
         private Timer _timer;
 
-        public TimedHostedService(ILogger<TimedHostedService> logger, RouterService iRouterService, EmployeesService iEmployeeService, UpdateRouterInfo updateRouterInfo)
+        public TimedHostedService(ILogger<TimedHostedService> logger, RouterService iRouterService, EmployeesService iEmployeeService)
         {
             _logger = logger;
             _iRouterService = iRouterService;
             _iEmployeeService = iEmployeeService;
-            _updateRouterInfo = updateRouterInfo;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)

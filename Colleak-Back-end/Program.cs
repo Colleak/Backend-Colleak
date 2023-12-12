@@ -26,7 +26,6 @@ KeyVaultSecret EmployeeCollectionName = client.GetSecret("EmployeeCollectionName
 
 builder.Services.AddSingleton<EmployeesService>();
 builder.Services.AddSingleton<RouterService>();
-builder.Services.AddSingleton<UpdateRouterInfo>();
 
 ColleakDatabaseSettings.ConnectionString = ConnectionString.Value;
 ColleakDatabaseSettings.DatabaseName = DatabaseName.Value;
