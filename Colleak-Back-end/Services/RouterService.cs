@@ -13,7 +13,7 @@ namespace Colleak_Back_end.Services
             SecretClient client = new SecretClient(new Uri("https://colleakdatabase.vault.azure.net/"), new DefaultAzureCredential());
             KeyVaultSecret merakiKey = client.GetSecret("X-Cisco-Meraki-API-Key");
 
-            string apiUrl = "https://api.meraki.com/api/v1/networks/L_714946440845072792/clients";
+            string apiUrl = "https://api.meraki.com/api/v1/networks/L_714946440845072792/clients?timespan=900&perPage=5000";
 
             HttpClient httpClient = new HttpClient();
 
@@ -34,8 +34,6 @@ namespace Colleak_Back_end.Services
                     string content = await response.Content.ReadAsStringAsync();
                     List<DeviceInfo> myObjects = JsonConvert.DeserializeObject<List<DeviceInfo>>(content);
 
-
-                    Console.WriteLine(content);
                     return myObjects;
                 }
                 else
