@@ -30,7 +30,7 @@ namespace Colleak_Back_end.Services
             _logger.LogInformation("Timed Hosted Service running.");
 
             _timer = new Timer(DoWork, null, TimeSpan.Zero,
-                TimeSpan.FromMinutes(cooldownTimeInMinutes));
+                TimeSpan.FromSeconds(cooldownTimeInMinutes));
 
             return Task.CompletedTask;
         }
@@ -42,8 +42,39 @@ namespace Colleak_Back_end.Services
             _logger.LogInformation(
                 "Timed Hosted Service is working. Count: {Count}", count);
 
-            _updateRouterInfo.UpdateAllRecentDeviceNames(_iEmployeeService, _iRouterService);
-        }        
+            UpdateAllRecentDeviceNames(cooldownTimeInMinutes);
+        }
+
+        public async void UpdateAllRecentDeviceNames(double timeCooldownInMinutes)
+        {
+            List<Employee> employees = await _iEmployeeService.GetEmployeeAsync();
+            List<DeviceInfo> routerData = await _iRouterService.GetAllRouterInfo();
+
+            foreach (Employee employee in employees)
+            {
+                foreach (DeviceInfo deviceInfo in routerData)
+                {
+                    if (employee.ConnectedDeviceMacAddress == deviceInfo.Mac)
+                    {
+                        Console.WriteLine("saved router name" + employee.ConnectedRouterName);
+                        if (!CheckIfSeenToday(timeCooldownInMinutes, deviceInfo.LastSeen)) break;
+                        employee.ConnectedRouterName = deviceInfo.RecentDeviceName;
+                        Console.WriteLine("new saved router name" + employee.ConnectedRouterName);
+
+                        await _iEmployeeService.UpdateEmployeeAsync(employee.Id, employee);
+                        break;
+                    }
+                }
+            }
+        }
+        private bool CheckIfSeenToday(double timeCooldownInMinutes, DateTime LastSeen)
+        {
+            if (DateTime.UtcNow.Day != LastSeen.Day)
+            {
+                return false;
+            }
+            return true;
+        }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {

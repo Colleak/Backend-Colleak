@@ -11,31 +11,36 @@ namespace Colleak_Back_end.Services
 
         }
 
-        public async void UpdateAllRecentDeviceNames(EmployeesService _iEmployeeService, RouterService _iRouterService)
+        public async void UpdateAllRecentDeviceNames(EmployeesService _iEmployeeService, RouterService _iRouterService, double timeCooldownInMinutes)
         {
             List<Employee> employees = await _iEmployeeService.GetEmployeeAsync();
             List<DeviceInfo> routerData = await _iRouterService.GetAllRouterInfo();
 
             foreach (Employee employee in employees)
             {
-                Employee updatedEmployee = LoopDeviceInfo(employee, routerData);
+                foreach (DeviceInfo deviceInfo in routerData)
+                {
+                    if (employee.ConnectedDeviceMacAddress == deviceInfo.Mac)
+                    {
+                        Console.WriteLine(employee.ConnectedRouterName);
+                        if (!CheckIfSeenToday(timeCooldownInMinutes, deviceInfo.LastSeen)) break;
+                        employee.ConnectedRouterName = deviceInfo.RecentDeviceName;
+                        Console.WriteLine(employee.ConnectedRouterName);
 
-                await _iEmployeeService.UpdateEmployeeAsync(updatedEmployee.Id, updatedEmployee);
+                        await _iEmployeeService.UpdateEmployeeAsync(employee.Id, employee);
+                        break;
+                    }
+                }
             }
         }
 
-        private Employee LoopDeviceInfo(Employee employee, List<DeviceInfo> routerData)
+        private bool CheckIfSeenToday(double timeCooldownInMinutes, DateTime LastSeen)
         {
-            foreach (DeviceInfo deviceInfo in routerData)
+            if (DateTime.UtcNow.Day != LastSeen.Day)
             {
-                if (employee.ConnectedDeviceMacAddress == deviceInfo.Mac)
-                {
-                    employee.ConnectedRouterName = deviceInfo.RecentDeviceName;
-                    Console.WriteLine(employee.ConnectedRouterName);
-                    return employee;
-                }
+                return false;
             }
-            return employee;
+            return true;
         }
     }
 }
