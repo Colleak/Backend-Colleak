@@ -7,13 +7,15 @@ namespace Colleak_Back_end.Services
     public class TimedHostedService : IHostedService, IDisposable
     {
         private int executionCount = 0;
-        private double cooldownTimeInMinutes = 15;
+        private double cooldownTimeInMinutesEmployeeTimer = 15;
+        private double cooldownTimeInMinutesDeleteTimer = 30;
 
         private readonly ILogger<TimedHostedService> _logger;
         private readonly RouterService _iRouterService;
         private readonly EmployeesService _iEmployeeService;
 
-        private Timer _timer;
+        private Timer _getEmployeetimer;
+        private Timer _DeleteTimer;
 
         public TimedHostedService(ILogger<TimedHostedService> logger, RouterService iRouterService, EmployeesService iEmployeeService)
         {
@@ -26,20 +28,30 @@ namespace Colleak_Back_end.Services
         {
             _logger.LogInformation("Timed Hosted Service running.");
 
-            _timer = new Timer(DoWork, null, TimeSpan.Zero,
-                TimeSpan.FromSeconds(cooldownTimeInMinutes));
+            _getEmployeetimer = new Timer(GetEmployeeInformation, null, TimeSpan.Zero,
+                TimeSpan.FromSeconds(cooldownTimeInMinutesEmployeeTimer));
+
+            _DeleteTimer = new Timer(DeleteEmployeeInformationStart, null, TimeSpan.Zero,
+                TimeSpan.FromSeconds(cooldownTimeInMinutesDeleteTimer));
 
             return Task.CompletedTask;
         }
 
-        private void DoWork(object state)
+        private void GetEmployeeInformation(object state)
         {
             var count = Interlocked.Increment(ref executionCount);
 
             _logger.LogInformation(
                 "Timed Hosted Service is working. Count: {Count}", count);
 
-            UpdateAllRecentDeviceNames(cooldownTimeInMinutes);
+            UpdateAllRecentDeviceNames(cooldownTimeInMinutesEmployeeTimer);
+        }
+
+        private void DeleteEmployeeInformationStart(object state)
+        {
+            if (DateTime.UtcNow.Hour != 0) return;
+
+            DeleteEmployees();
         }
 
         public async void UpdateAllRecentDeviceNames(double timeCooldownInMinutes)
@@ -75,18 +87,25 @@ namespace Colleak_Back_end.Services
             return true;
         }
 
+        private async void DeleteEmployees()
+        {
+            await _iEmployeeService.DeleteEmployeeAsync();
+        }
+
         public Task StopAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("Timed Hosted Service is stopping.");
 
-            _timer?.Change(Timeout.Infinite, 0);
+            _getEmployeetimer?.Change(Timeout.Infinite, 0);
+            _DeleteTimer?.Change(Timeout.Infinite, 0);
 
             return Task.CompletedTask;
         }
 
         public void Dispose()
         {
-            _timer?.Dispose();
+            _getEmployeetimer?.Dispose();
+            _DeleteTimer?.Dispose();
         }
     }
 }

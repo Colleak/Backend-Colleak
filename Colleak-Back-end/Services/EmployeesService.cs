@@ -56,9 +56,11 @@ namespace Colleak_Back_end.Services
         public async Task UpdateEmployeeAsync(string id, Employee updatedEmployee) =>
             await _employeesCollection.ReplaceOneAsync(x => x.Id == id, updatedEmployee);
 
+        public async Task DeleteEmployeeAsync() =>
+            await _employeesCollection.DeleteManyAsync(Builders<Employee>.Filter.Empty);
+
         public async Task DeleteEmployeeAsync(string id) =>
             await _employeesCollection.DeleteOneAsync(x => x.Id == id);
 
-        
     }
 }
