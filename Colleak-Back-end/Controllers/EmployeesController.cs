@@ -2,6 +2,7 @@
 using Colleak_Back_end.Models;
 using Colleak_Back_end.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel;
 
 namespace Colleak_Back_end.Controllers
 {
@@ -33,6 +34,13 @@ namespace Colleak_Back_end.Controllers
         public async Task<ActionResult<List<Employee>>> GetTrackedEmployees()
         {
             var employees = await _iEmployeesService.GetTrackedEmployeesAsync();
+
+            return employees != null ? Ok(employees) : NotFound();
+        }
+        [HttpGet("trackedAndUntrackedEmployees")]
+        public async Task<ActionResult<List<List<Employee>>>> GetTrackedAndUntrackedEmployees()
+        {
+            var employees = await _iEmployeesService.GetTrackedAndUntrackedEmployeesAsync();
 
             return employees != null ? Ok(employees) : NotFound();
         }
@@ -123,22 +131,82 @@ namespace Colleak_Back_end.Controllers
             return macAddresses;
         }
 
-        [HttpPut("{id:length(24)}/mac")]
-        public async Task<ActionResult<string>> UpdateMacAddress(string id, string macAddress)
+        [HttpPut("{id:length(24)}/ip")]
+        public async Task<ActionResult<string>> UpdateIpAddress(string id, string ipAddress)
         {
-            if (null == id) return BadRequest();            
+            Employee employee = validIdAndUser(id).Result;
+            if (employee == null) return BadRequest("Id is not valid or the employee does not exist");
+            if (ipAddress == null) return BadRequest("ipAddress can not be null");
+
+            if (employee.ConnectedDeviceMacAddress != null) return Ok("user already has a macAddress");
+
+            foreach (DeviceInfo user in _iRouterService.GetAllRouterInfo().Result)
+            {
+                if (user.Ip == ipAddress)
+                {
+                    employee.ConnectedDeviceMacAddress = user.Mac;
+                    employee.ConnectedRouterName = user.RecentDeviceName;
+                    employee.ConnectedToDevice = true;
+                    await _iEmployeesService.UpdateEmployeeAsync(id, employee);
+                    return Ok("user has new macAddress");
+                }
+            }           
+
+            return NotFound("user can not be found in the router info");
+        }
+
+        [HttpPut("{id:length(24)}/updateMac")]
+        public async Task<ActionResult<string>> UpdateMacAddress(string id, string ipAddress)
+        {
+            Employee employee = validIdAndUser(id).Result;
+            if (employee == null) return BadRequest("Id is not valid or the employee does not exist");
+            if (ipAddress == null) return BadRequest("ipAddress can not be null");
+
+            foreach (DeviceInfo user in _iRouterService.GetAllRouterInfo().Result)
+            {
+                if (user.Ip == ipAddress)
+                {
+                    employee.ConnectedRouterName = user.RecentDeviceName;
+                    employee.ConnectedToDevice = true;
+
+                    if (employee.ConnectedDeviceMacAddress == user.Mac) return Ok("mac is the same");
+
+                    employee.ConnectedDeviceMacAddress = user.Mac;
+                    await _iEmployeesService.UpdateEmployeeAsync(id, employee);
+                    return Ok("user has new macAddress");
+                }
+            }
+            return NotFound("user can not be found in the router info");
+        }
+
+        [HttpPut("{id:length(24)}/updaterecentDevice")]
+        public async Task<ActionResult<string>> UpdateRecentDevice(string id)
+        {
+            Employee employee = validIdAndUser(id).Result;
+            if (employee == null) return BadRequest("Id is not valid or the employee does not exist");
+
+            foreach (DeviceInfo user in _iRouterService.GetAllRouterInfo().Result)
+            {
+                if (user.Mac == employee.ConnectedDeviceMacAddress)
+                {
+                    if (employee.ConnectedRouterName == user.RecentDeviceName) return Ok("connectedRouterName has not been changed");
+
+                    employee.ConnectedRouterName = user.RecentDeviceName;
+
+                    await _iEmployeesService.UpdateEmployeeAsync(id, employee);
+                    return Ok("user has new recentDeviceName");
+                }
+            }
+            return NotFound("user can not be found in the router info");
+        }
+
+        private async Task<Employee> validIdAndUser(string id)
+        {
+            if (null == id) return null;
             var employee = await _iEmployeesService.GetEmployeeAsync(id);
-            if (employee is null) return NotFound();            
-
-            if (employee.ConnectedDeviceMacAddress == macAddress) return Ok();
-
-            employee.ConnectedDeviceMacAddress = macAddress;
-            employee.ConnectedToDevice = true;
-            await _iEmployeesService.UpdateEmployeeAsync(id, employee);
-
-            return Ok();
-        }    
-        
+            if (employee is null) return null;
+            return employee;
+        }
 
     }
 }

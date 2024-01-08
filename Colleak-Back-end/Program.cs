@@ -39,6 +39,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IEmployeesService, EmployeesService>();
 builder.Services.AddScoped<IRouterService, RouterService>();
 
+builder.Services.AddHostedService<TimedHostedService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
