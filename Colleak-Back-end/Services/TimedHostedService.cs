@@ -55,6 +55,8 @@ namespace Colleak_Back_end.Services
                     {
                         Console.WriteLine("saved router name" + employee.ConnectedRouterName);
                         if (!CheckIfSeenToday(timeCooldownInMinutes, deviceInfo.LastSeen)) break;
+                        if (employee.ConnectedRouterName == deviceInfo.RecentDeviceName) break;
+                        
                         employee.ConnectedRouterName = deviceInfo.RecentDeviceName;
                         Console.WriteLine("new saved router name" + employee.ConnectedRouterName);
 
