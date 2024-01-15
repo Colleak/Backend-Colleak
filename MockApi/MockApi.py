@@ -1,102 +1,25 @@
-## Summary
-These are the endpoints of our Mock API
-
-## Example Usage
-
-
-## Code Analysis
-### Inputs
-- `data`: The JSON data received in the request.
-- `required_fields`: A list of fields that are required in the input data.
-___
-### Flow
-1. The code defines a Flask application and sets up logging.
-2. There is a function `validate_input` that checks if the required fields are present in the input data.
-3. There are several routes defined for different actions like sending messages, pings, calls, and checking availability.
-4. Each route validates the input data using the `validate_input` function and returns an error response if any required fields are missing.
-5. The routes perform the required actions based on the input data and log the relevant information.
-
-___
+"""
+This code snippet is a Flask API that handles various routes for sending messages, pings, calls, and checking availability. It also includes routes for setting and checking user location and disturbance status.
 
 The API has the following routes:
 - GET /: Returns a welcome message.
-- POST /`send_message`: Sends a message from one user to another.
-- POST /`send_ping`: Sends a ping from one user to another.
-- POST /`send_call`: Initiates a call from one user to another.
-- POST /`atm_available`: Checks if a user is available at the current hour.
-- POST /`available`: Checks if a user is available at a specific time.
-- POST /`on_location`: Returns the current location status of a user.
-- POST /`set_location`: Sets the location status of a user.
-- POST /`disturb`: Handles the disturbance status of a user.
-
-```python
-# Send a message
-POST /send_message
-{
-    "sender_id": "653fad3009ae93a5292195d4",
-    "receiver_id": "653fb6cb09ae93a5292195d6",
-    "message": "Hello, When do you have time to meet?",
-    "sender_name": "Art Nooijen",
-    "receiver_name": "jelle Manders"
-}
-
-# Send a ping
-POST /send_ping
-{
-    "sender_id": "653fad3009ae93a5292195d4",
-    "receiver_id": "653fb6cb09ae93a5292195d6",
-    "sender_name": "Art Nooijen",
-    "receiver_name": "jelle Manders"
-}
-
-# Initiate a call
-POST /send_call
-{
-    "sender_id": "653fad3009ae93a5292195d4",
-    "receiver_id": "653fb6cb09ae93a5292195d6",
-    "sender_name": "Art Nooijen",
-    "receiver_name": "jelle Manders"
-}
-
-# Check if a person is available at the current hour
-POST /atm_available
-{
-    "receiver_id": "653fb6cb09ae93a5292195d6",
-    "receiver_name": "jelle Manders"
-}
-
-# Check if a person is available at a specific hour
-POST /available
-{
-    "receiver_id": "653fb6cb09ae93a5292195d6",
-    "receiver_name": "jelle Manders",
-    "request_time": "11"
-}
-
-# Set disturb status for a person
-POST /disturb
-{
-    "receiver_id": "653fb6cb09ae93a5292195d6",
-    "receiver_name": "jelle Manders",
-    "disturb": "true"
-}
-
-# Check if a person is on location or working from home
-POST /is_on_location
-{
-    "receiver_id": "653fb6cb09ae93a5292195d6",
-    "receiver_name": "jelle Manders",
-    "is_on_location": "true"
-}
-```
+- POST /send_message: Sends a message from one user to another.
+- POST /send_ping: Sends a ping from one user to another.
+- POST /send_call: Initiates a call from one user to another.
+- POST /atm_available: Checks if a user is available at the current hour.
+- POST /available: Checks if a user is available at a specific time.
+- POST /on_location: Returns the current location status of a user.
+- POST /set_location: Sets the location status of a user.
+- POST /disturb: Handles the disturbance status of a user.
 
 Each route expects JSON data as input and returns a JSON response with a status field indicating the success or error status, and a message field providing additional information. Some routes also include additional fields such as Time or AvailableArray.
 
-We also validate the input data to ensure that all required fields are present. If any required fields are missing, we return an error response.
+The code snippet also includes a helper function validate_input() to validate the input data for each route.
 
-To run the API, execute the script and the API will be accessible at artofghost.pythonanywhere.com.
+To run the API, execute the script and the API will be accessible at http://localhost:8001.
 
-```python
+Note: The code snippet is not a class, function, or method. It is a script that runs a Flask API.
+"""
 from flask import Flask, request, jsonify
 import logging
 import datetime
@@ -274,4 +197,3 @@ def disturb():
 
 if __name__ == '__main__':
     app.run(debug=True,port=8001)
-```
