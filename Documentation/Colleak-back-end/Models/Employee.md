@@ -7,3 +7,6 @@ Employee bestaat uit:
 - string: EmployeeName
 - string?: AllowLocationTracking
 - string?: ConnectedRouterName
+- string?: ConnectedDeviceMacAddres
+- bool? ConnectedToDevice
+- DateTime?: LastActiveTime
