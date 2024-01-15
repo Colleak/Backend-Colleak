@@ -66,6 +66,10 @@ namespace Colleak_Back_end.Services
                     if (employee.ConnectedDeviceMacAddress == deviceInfo.Mac)
                     {
                         Console.WriteLine("saved router name" + employee.ConnectedRouterName);
+                        employee.LastActiveTime = deviceInfo.LastSeen;
+                        await _iEmployeeService.UpdateEmployeeAsync(employee.Id, employee);
+                        Console.WriteLine(employee.LastActiveTime);
+
                         if (!CheckIfSeenToday(timeCooldownInMinutes, deviceInfo.LastSeen)) break;
                         if (employee.ConnectedRouterName == deviceInfo.RecentDeviceName) break;
                         
