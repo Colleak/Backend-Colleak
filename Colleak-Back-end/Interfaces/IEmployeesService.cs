@@ -16,6 +16,7 @@ namespace Colleak_Back_end.Interfaces
 
         Task UpdateEmployeeAsync(string id, Employee updateEmployee);
 
+        Task DeleteEmployeeAsync();
         Task DeleteEmployeeAsync(string id);
     }
 }
