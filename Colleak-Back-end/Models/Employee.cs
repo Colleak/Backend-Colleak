@@ -18,5 +18,10 @@ namespace Colleak_Back_end.Models
         public string? ConnectedDeviceMacAddress { get; set; }
 
         public bool? ConnectedToDevice { get; set; }
+
+        [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
+        public DateTime? LastActiveTime { get; set; }
+
+        public string? ip { get; set; }
     }
 }

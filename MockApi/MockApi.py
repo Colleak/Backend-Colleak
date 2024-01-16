@@ -1,3 +1,25 @@
+"""
+This code snippet is a Flask API that handles various routes for sending messages, pings, calls, and checking availability. It also includes routes for setting and checking user location and disturbance status.
+
+The API has the following routes:
+- GET /: Returns a welcome message.
+- POST /send_message: Sends a message from one user to another.
+- POST /send_ping: Sends a ping from one user to another.
+- POST /send_call: Initiates a call from one user to another.
+- POST /atm_available: Checks if a user is available at the current hour.
+- POST /available: Checks if a user is available at a specific time.
+- POST /on_location: Returns the current location status of a user.
+- POST /set_location: Sets the location status of a user.
+- POST /disturb: Handles the disturbance status of a user.
+
+Each route expects JSON data as input and returns a JSON response with a status field indicating the success or error status, and a message field providing additional information. Some routes also include additional fields such as Time or AvailableArray.
+
+The code snippet also includes a helper function validate_input() to validate the input data for each route.
+
+To run the API, execute the script and the API will be accessible at http://localhost:8001.
+
+Note: The code snippet is not a class, function, or method. It is a script that runs a Flask API.
+"""
 from flask import Flask, request, jsonify
 import logging
 import datetime
@@ -76,7 +98,7 @@ def send_call():
     logging.info(f"Call from {caller_name}({caller_id}) to {receiver_name}({receiver_id})")
     return jsonify({"status": "success", "message": "Call initiated"}), 200
 
-Not_Available_Array = [11, 12, 13, 18, 19]
+Not_Available_Array = [20,11,12,13,16,18]
 date =  datetime.datetime.now()
 current_hour = date.hour
 
@@ -88,14 +110,14 @@ def is_person_atm_available():
         return jsonify({"status": "error", "message": error_message}), 400
 
     receiver_id = data['receiver_id']
-    request_time = int(current_hour)
+    request_time = int(current_hour) + 1
     receiver_name = data['receiver_name']
 
     is_available = request_time not in Not_Available_Array
 
     if is_available:
         logging.info(f"{receiver_name}({receiver_id}) is available. Send to: {receiver_name}({receiver_id}) at {request_time}")
-        return jsonify({"status": "success", "message": "User is currently available"})
+        return jsonify({"status": "success", "message": "User is currently available", "Time": request_time})
     else:
         logging.info(f"{receiver_name}({receiver_id}) is not available at {request_time}")
         return jsonify({"status": "success", "message": "User is currently not available"})
@@ -115,10 +137,44 @@ def is_person_available():
 
     if is_available:
         logging.info(f"{receiver_name}({receiver_id}) is available. Send to: {receiver_name}({receiver_id}) at {request_time}")
-        return jsonify({"status": "success", "message": "User is available"})
+        return jsonify({"status": "success", "message": "User is available" , "AvailableArray": Not_Available_Array})
     else:
         logging.info(f"{receiver_name}({receiver_id}) is not available at {request_time}")
-        return jsonify({"status": "success", "message": "User is not available"})
+        return jsonify({"status": "success", "message": "User is not available","AvailableArray": Not_Available_Array})
+
+on_location = True
+
+@app.route('/on_location', methods=['POST'])
+def on_location_get():
+    data = request.json
+    valid, error_message = validate_input(data, ['sender_id'])
+    if not valid:
+        return jsonify({"status": "error", "message": error_message}), 400
+
+    sender_id = data['sender_id']
+
+    return jsonify({"status": "success", "message": on_location, "user_id": sender_id})
+
+@app.route('/set_location', methods=['POST'])
+def set_location():
+    global on_location
+    data = request.json
+    valid, error_message = validate_input(data, ['sender_id', 'sender_name'])
+    if not valid:
+        return jsonify({"status": "error", "message": error_message}), 400
+
+    receiver_id = data['sender_id']
+    receiver_name = data['sender_name']
+
+    if on_location:
+        on_location = False
+        logging.info(f"{receiver_name}({receiver_id}) is not on location")
+        return jsonify({"status": "success", "message": "You are not on location"})
+
+    else :
+        on_location = True
+        logging.info(f"{receiver_name}({receiver_id}) is on location")
+        return jsonify({"status": "success", "message": "You are on location"})
 
 @app.route('/disturb', methods=['POST'])
 def disturb():
@@ -138,27 +194,6 @@ def disturb():
         logging.info(f"{receiver_name}({receiver_id}) cannot be contacted")
         return jsonify({"status": "success", "message": "Your location is no longer shared"})
 
-@app.route('/is_on_location', methods=['POST'])
-def is_on_location():
-    data = request.json
-    valid, error_message = validate_input(data, ['receiver_id', 'receiver_name', 'is_on_location'])
-    if not valid:
-        return jsonify({"status": "error", "message": error_message}), 400
-
-    receiver_id = data['receiver_id']
-    receiver_name = data['receiver_name']
-
-    if isinstance(data['is_on_location'], bool):
-        is_on_location = data['is_on_location']
-    else:
-        is_on_location = data['is_on_location'].lower() == 'true'
-
-    if is_on_location:
-        logging.info(f"{receiver_name}({receiver_id}) is on location")
-        return jsonify({"status": "success", "message": "Is on location", "is_on_location": "True"})
-    else:
-        logging.info(f"{receiver_name}({receiver_id}) is working from home")
-        return jsonify({"status": "success", "message": "Is working from home","is_on_location": "False"})
 
 if __name__ == '__main__':
     app.run(debug=True,port=8001)

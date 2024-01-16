@@ -1,0 +1,1 @@
+Het DeviceInfo-model is er om de data die wordt verkregen te formatten naar een duidelijk bruikbaar formaat in de applicatie.

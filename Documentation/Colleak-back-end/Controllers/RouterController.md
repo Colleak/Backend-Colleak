@@ -1,0 +1,1 @@
+De RouterController bevat de endpoint om de routerdata op te halen en te krijgen. Deze endpoint is er voor debug doeleinden voor als de applicatie niet goed werkt of als er errors komen.
