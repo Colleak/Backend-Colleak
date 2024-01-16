@@ -81,6 +81,29 @@ namespace Colleak_Back_end.Controllers
             return Ok(CreatedAtAction(nameof(Get), new { id = newEmployee.Id }, newEmployee));
         }
 
+        [HttpPost("employee/login")]
+        public async Task<ActionResult> PostEmployeeIp(Employee newEmployee)
+        {
+            if (!ModelState.IsValid || newEmployee.EmployeeName == null || newEmployee.ip == null)
+            {
+                return BadRequest();
+            }
+
+            foreach (DeviceInfo user in _iRouterService.GetAllRouterInfo().Result)
+            {
+                if (user.Ip == newEmployee.ip)
+                {
+                    newEmployee.ConnectedDeviceMacAddress = user.Mac;
+                    newEmployee.ConnectedRouterName = user.RecentDeviceName;
+                    newEmployee.ConnectedToDevice = true;
+                    await _iEmployeesService.CreateEmployeeAsync(newEmployee);
+                    return Ok(CreatedAtAction(nameof(Get), new { id = newEmployee.Id }, newEmployee));
+                }
+            }
+
+            return BadRequest("Fuck you");
+        }
+
         [HttpPut("{id:length(24)}")]
         public async Task<ActionResult> Update(string id, Employee updatedEmployee)
         {
