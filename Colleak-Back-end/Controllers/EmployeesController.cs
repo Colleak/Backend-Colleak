@@ -155,6 +155,30 @@ namespace Colleak_Back_end.Controllers
             return NotFound("user can not be found in the router info");
         }
 
+        [HttpPut("{id:length(24)}/iphotfix")]
+        public async Task<ActionResult<string>> UpdateIpAddresshotfix(string id, Employee updatedEmployee)
+        {
+            Employee employee = validIdAndUser(id).Result;
+            if (employee == null) return BadRequest("Id is not valid or the employee does not exist");
+            if (updatedEmployee.ip == null) return BadRequest("ipAddress can not be null");
+
+            if (employee.ConnectedDeviceMacAddress != null) return Ok("user already has a macAddress");
+
+            foreach (DeviceInfo user in _iRouterService.GetAllRouterInfo().Result)
+            {
+                if (user.Ip == updatedEmployee.ip)
+                {
+                    employee.ConnectedDeviceMacAddress = user.Mac;
+                    employee.ConnectedRouterName = user.RecentDeviceName;
+                    employee.ConnectedToDevice = true;
+                    await _iEmployeesService.UpdateEmployeeAsync(id, employee);
+                    return Ok("user has new macAddress");
+                }
+            }
+
+            return NotFound("user can not be found in the router info");
+        }
+
         [HttpPut("{id:length(24)}/updateMac")]
         public async Task<ActionResult<string>> UpdateMacAddress(string id, string ipAddress)
         {

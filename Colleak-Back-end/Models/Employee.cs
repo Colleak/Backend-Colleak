@@ -21,5 +21,7 @@ namespace Colleak_Back_end.Models
 
         [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
         public DateTime? LastActiveTime { get; set; }
+
+        public string? ip { get; set; }
     }
 }
