@@ -84,7 +84,7 @@ namespace Colleak_Back_end.Controllers
         [HttpPost("employee/login")]
         public async Task<ActionResult> PostEmployeeIp(Employee newEmployee)
         {
-            if (!ModelState.IsValid || newEmployee.EmployeeName == null || newEmployee.ip == null)
+            if (newEmployee.EmployeeName == null || newEmployee.ip == null)
             {
                 return BadRequest();
             }
