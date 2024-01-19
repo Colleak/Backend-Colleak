@@ -89,6 +89,15 @@ namespace Colleak_Back_end.Controllers
                 return BadRequest();
             }
 
+            List <Employee> employees = await _iEmployeesService.GetEmployeeAsync();
+            foreach (Employee employee in employees)
+            {
+                if (employee.EmployeeName == newEmployee.EmployeeName)
+                {
+                    return BadRequest("Employee already exist with the send name");
+                }
+            }
+
             foreach (DeviceInfo user in _iRouterService.GetAllRouterInfo().Result)
             {
                 if (user.Ip == newEmployee.ip)
