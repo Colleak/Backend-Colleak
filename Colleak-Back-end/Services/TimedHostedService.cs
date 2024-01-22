@@ -7,7 +7,7 @@ namespace Colleak_Back_end.Services
     public class TimedHostedService : IHostedService, IDisposable
     {
         private int executionCount = 0;
-        private double cooldownTimeInMinutesEmployeeTimer = 15;
+        private double cooldownTimeInMinutesEmployeeTimer = 5;
         private double cooldownTimeInMinutesDeleteTimer = 30;
 
         private readonly ILogger<TimedHostedService> _logger;
